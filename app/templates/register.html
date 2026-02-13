@@ -1,0 +1,111 @@
+{% extends "index.html" %}
+
+{% block title %}
+<title>Registration Page</title>
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h3 class="text-center mb-4">Registration Form</h3>
+
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Name -->
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" name="name" class="form-control" value="{{data.name}}">
+            </div>
+            
+            <!-- Gender -->
+            <div class="mb-3">
+                <label class="form-label">Gender</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" value="Male">
+                    <label class="form-check-label">Male</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" value="Female">
+                    <label class="form-check-label">Female</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" value="Others">
+                    <label class="form-check-label">Others</label>
+                </div>
+            </div>
+            
+            <!-- Qualification -->
+            <div class="mb-3">
+                <label class="form-label">Qualification</label><br>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="qualification" value="10th">
+                    <label class="form-check-label">10th</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="qualification" value="12th">
+                    <label class="form-check-label">12th</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="qualification" value="Graduate">
+                    <label class="form-check-label">Graduate</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="qualification" value="Post-Graduate">
+                    <label class="form-check-label">Post-Graduate</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="qualification" value="PhD">
+                    <label class="form-check-label">PhD</label>
+                </div>
+            </div>
+            
+            <!-- Age Group -->
+            <div class="mb-3">
+                <label class="form-label">Age Group</label>
+                <select name="age_group" class="form-select" >
+                    <option value="">Select</option>
+                    <option value="0-18">0–18</option>
+                    <option value="19-45">19–45</option>
+                    <option value="46-65">46–65</option>
+                    <option value="65+">65+</option>
+                </select>
+            </div>
+            {% comment %} <div class="mb-3">
+                <label class="form-label">Age_group</label>
+                <input type="number" name="age_group" class="form-control">
+                </div> {% endcomment %}
+                
+            <h6 style="color:red">{{msg}}</h6>
+            <!-- Email -->
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" value="{{data.email}}">
+            </div>
+
+            <!-- Contact -->
+            <div class="mb-3">
+                <label class="form-label">Contact</label>
+                <input type="number" name="contact" class="form-control" value="{{data.contact}}">
+            </div>
+            
+            <h6 style="color:red">{{pmsg}}</h6>
+            <!-- Password -->
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control">
+            </div>
+
+            <!--Confirm Password -->
+            <div class="mb-3">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" name="confirm_password" class="form-control">
+            </div>
+
+            <!-- Submit -->
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
