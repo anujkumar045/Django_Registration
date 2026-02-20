@@ -1,29 +1,47 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Admin Dashboard</title>
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f6f9;
         }
 
-        /* Top Navbar */
+        /* Navbar */
         .navbar {
-            background-color: rgba(102, 155, 24, 0.7);
+            background-color: #1f2937;
             color: white;
-            padding: 15px;
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar span {
+            font-size: 16px;
+            font-weight: 500;
         }
 
         .navbar a {
             color: white;
             text-decoration: none;
-            font-weight: bold;
+            padding: 8px 16px;
+            background-color: #2563eb;
+            border-radius: 5px;
+            transition: 0.3s ease;
+            font-size: 14px;
         }
 
-        /* Main Layout */
+        .navbar a:hover {
+            background-color: #1e40af;
+        }
+
+        /* Layout */
         .container {
             display: flex;
             height: 90vh;
@@ -31,65 +49,228 @@
 
         /* Sidebar */
         .sidebar {
-            width: 220px;
-            background-color: rgba(34, 101, 27, 0.7);
+            width: 240px;
+            background-color: #374151;
             padding-top: 20px;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
         }
 
         .sidebar a {
             display: block;
-            color: white;
-            padding: 12px;
+            color: #e5e7eb;
+            padding: 14px 20px;
             text-decoration: none;
-            border-bottom: 1px solid #2c3e50;
+            font-size: 14px;
+            transition: 0.3s;
+            border-left: 4px solid transparent;
         }
 
         .sidebar a:hover {
-            background-color: #1abc9c;
+            background-color: #4b5563;
+            border-left: 4px solid #2563eb;
+            padding-left: 25px;
         }
 
-        /* Content Area */
+        /* Content */
         .content {
             flex: 1;
-            padding: 30px;
-            background-color: #ecf0f1;
+            padding: 40px;
         }
 
         .box {
-            background: white;
+            background-color: white;
             padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
+        .box h2 {
+            margin-top: 0;
+            color: #1f2937;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #2563eb;
+            outline: none;
+            box-shadow: 0 0 5px rgba(37, 99, 235, 0.3);
+        }
+
+        .submit-btn {
+            padding: 12px 25px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #1e40af;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th {
+            background-color: #2563eb;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table td {
+            padding: 10px;
+            border-bottom: 1px solid #d1d5db;
+        }
+
+        table tr:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* Messages */
+        .message {
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .error {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="navbar">
-        <div>Welcome {{data.name}}</div>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <img src="{% static 'images/pp1.jpeg' %}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
+            <span>Welcome {{ data.name }}</span>
+        </div>
         <div><a href="#">Logout</a></div>
     </div>
 
     <div class="container">
 
         <div class="sidebar">
-            <a href="#">Add Department</a>
-            <a href="#">Show Department</a>
+            <a href="{% url 'add_dep' %}">Add Department</a>
+            <a href="{% url 'show_dep' %}">Show Department</a>
             <a href="#">Add Employee</a>
             <a href="#">Show Employee</a>
-            <a href="#">Employee Query</a>           
+            <a href="#">Employee Query</a>
+            <a href="#">Profile</a>
         </div>
 
         <div class="content">
             <div class="box">
-                <h2>Dashboard Content Area</h2>
-                 <h2>hello</h2>
+
+                <!-- Messages -->
+                {% if messages %}
+                {% for message in messages %}
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+
+                <!-- Add Department Form -->
+                {% if add_dep %}
+                <h2>Add Department</h2>
+
+                <form action="{% url 'save_data' %}" method="POST">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label>Department Name</label>
+                        <input type="text" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Department Code</label>
+                        <input type="text" name="code" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Head of Department</label>
+                        <input type="text" name="head" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" rows="4" required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Save Department</button>
+                </form>
+
+                <!-- Show Department Table -->
+                {% elif show_dep %}
+                <h2>All Departments</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Head</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for dept in Department %}
+                        <tr>
+                            <td>{{ dept.Dep_name }}</td>
+                            <td>{{ dept.Dep_code }}</td>
+                            <td>{{ dept.Dep_head }}</td>
+                            <td>{{ dept.Dep_description }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align:center;">No departments found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% else %}
+                <h2>Welcome to Admin Dashboard</h2>
+                {% endif %}
+
             </div>
         </div>
-
     </div>
 
 </body>
+
 </html>

@@ -25,5 +25,11 @@ urlpatterns = [
     path('login/',login,name='login'),
     path('userdashboard/',userdashboard,name='userdashboard'),
     path('logout/',logout,name='logout'),
-    path('admindashboard/',admindashboard,name='admindashboard')
+    path('admindashboard/',admindashboard,name='admindashboard'),
+    path('admindashboard/add_dep/',add_dep,name='add_dep'),
+    path('admindashboard/save_data/',save_data,name='save_data'),
+    path('admindashboard/show_dep/',show_dep,name='show_dep'),
+
+
+
 ]

@@ -10,3 +10,11 @@ class Employee(models.Model):
     Contact=models.BigIntegerField()
     Password=models.CharField(max_length=8)
     Confirm_Password=models.CharField(max_length=8,null=True)
+
+class Department(models.Model):
+    Dep_name = models.CharField(max_length=100)
+    Dep_code = models.CharField(max_length=20, unique=True)
+    Dep_head = models.CharField(max_length=100)
+    Dep_description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+

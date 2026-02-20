@@ -1,5 +1,7 @@
 from django.shortcuts import render,redirect
 from .models import Employee
+from .models import Department 
+from django.contrib import messages
 
 # Create your views here.
 def landing(req):
@@ -84,3 +86,39 @@ def admindashboard(req):
     if 'a_data' in req.session:
         a_data=req.session.get('a_data')
         return render(req,'admindashboard.html',{'data':a_data})
+    else:
+        return redirect('login')
+    
+def add_dep(req):
+    if 'a_data' in req.session:
+        a_data=req.session.get('a_data')
+        return render(req,'admindashboard.html',{'data':a_data,'add_dep':True})
+    else:
+        return redirect('login')
+
+def save_data(req):
+    if 'a_data' in req.session:
+        if req.method=='POST':
+            d_n=req.POST.get('name') 
+            d_c=req.POST.get('code') 
+            d_h=req.POST.get('head') 
+            d_d=req.POST.get('description')
+            dept=Department.objects.filter(Dep_name=d_n)
+            if dept:
+                messages.warning(req,'Department already exists')
+                a_data=req.session.get('a_data')
+                return render(req,'admindashboard.html',{'data':a_data,'add_dep':True})
+            else:
+                Department.objects.create(Dep_name=d_n,Dep_code=d_c,Dep_head=d_h,Dep_description=d_d)
+                messages.success(req,"Department created")
+                a_data=req.session.get('a_data')
+                return render(req,'admindashboard.html',{'data':a_data,'add_dep':True})
+    else:
+        return redirect('login')
+
+def show_dep(req):
+    if 'a_data' in req.session:
+        a_data=req.session.get('a_data')
+        return render(req,'admindashboard.html',{'data':a_data,'show_dep':True})
+    else:
+        return redirect('login')
