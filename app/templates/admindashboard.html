@@ -188,7 +188,7 @@
         <div class="sidebar">
             <a href="{% url 'add_dep' %}">Add Department</a>
             <a href="{% url 'show_dep' %}">Show Department</a>
-            <a href="#">Add Employee</a>
+            <a href="{% url 'add_emp' %}">Add Employee</a>
             <a href="#">Show Employee</a>
             <a href="#">Employee Query</a>
             <a href="#">Profile</a>
@@ -241,28 +241,85 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>S.No.</th>
                             <th>Name</th>
                             <th>Code</th>
                             <th>Head</th>
                             <th>Description</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+
                         </tr>
                     </thead>
                     <tbody>
-                        {% for dept in Department %}
+                        {% for i in all_dept %}
                         <tr>
-                            <td>{{ dept.Dep_name }}</td>
-                            <td>{{ dept.Dep_code }}</td>
-                            <td>{{ dept.Dep_head }}</td>
-                            <td>{{ dept.Dep_description }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5" style="text-align:center;">No departments found.</td>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{ i.Dep_name }}</td>
+                            <td>{{ i.Dep_code }}</td>
+                            <td>{{ i.Dep_head }}</td>
+                            <td>{{ i.Dep_description }}</td>
+                            <td><a><button>Edit</button></a></td>
+                            <td><a><button>Delete</button></a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
 
+                {% elif add_emp %}
+                    <div class="container">
+                        <h2 align="center">Add Employee</h2>
+                        
+
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <table>
+                                <tr>
+                                    <td>Emp Name:</td>
+                                    <td><input type="text" name="emp_name" required></td>
+                                </tr>
+
+                                <tr>
+                                    <td>Emp Contact:</td>
+                                    <td><input type="text" name="emp_contact" required></td>
+                                </tr>
+
+                                <tr>
+                                    <td>Emp Email:</td>
+                                    <td><input type="email" name="emp_email" required></td>
+                                </tr>
+
+                                <tr>
+                                    <td>Emp Dept:</td>
+                                    <td>
+                                        <select name="emp_dept" required>
+                                            <option value="">Select Dept</option>
+                                            {% for i in all_dept %}
+                                            <option value="{{ i.id }}">{{ i.Dep_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>Emp Code:</td>
+                                    <td><input type="text" name="emp_code" required></td>
+                                </tr>
+
+                                <tr>
+                                    <td>Emp Image:</td>
+                                    <td><input type="file" name="emp_image"></td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="2" class="btn-row">
+                                        <button type="submit">Add Employee</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+
+                    </div>
                 {% else %}
                 <h2>Welcome to Admin Dashboard</h2>
                 {% endif %}

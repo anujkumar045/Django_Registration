@@ -29,7 +29,5 @@ urlpatterns = [
     path('admindashboard/add_dep/',add_dep,name='add_dep'),
     path('admindashboard/save_data/',save_data,name='save_data'),
     path('admindashboard/show_dep/',show_dep,name='show_dep'),
-
-
-
+    path('admindashboard/add_emp/',add_emp,name='add_emp'),
 ]

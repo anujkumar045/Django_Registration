@@ -119,6 +119,15 @@ def save_data(req):
 def show_dep(req):
     if 'a_data' in req.session:
         a_data=req.session.get('a_data')
-        return render(req,'admindashboard.html',{'data':a_data,'show_dep':True})
+        all_dept=Department.objects.all()
+        return render(req,'admindashboard.html',{'data':a_data,'show_dep':True,'all_dept':all_dept})
+    else:
+        return redirect('login')
+    
+def add_emp(req):
+    if 'a_data' in req.session:
+        a_data=req.session.get('a_data')
+        all_dept=Department.objects.all()
+        return render(req,'admindashboard.html',{'data':a_data,'add_emp':True,'all_dept':all_dept})
     else:
         return redirect('login')
