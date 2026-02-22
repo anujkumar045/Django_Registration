@@ -189,7 +189,7 @@
             <a href="{% url 'add_dep' %}">Add Department</a>
             <a href="{% url 'show_dep' %}">Show Department</a>
             <a href="{% url 'add_emp' %}">Add Employee</a>
-            <a href="#">Show Employee</a>
+            <a href="{% url 'show_emp' %}">Show Employee</a>
             <a href="#">Employee Query</a>
             <a href="#">Profile</a>
         </div>
@@ -271,7 +271,7 @@
                         <h2 align="center">Add Employee</h2>
                         
 
-                        <form method="POST" enctype="multipart/form-data">
+                        <form action="{% url 'save_emp' %}"method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
                             <table>
                                 <tr>
@@ -295,7 +295,7 @@
                                         <select name="emp_dept" required>
                                             <option value="">Select Dept</option>
                                             {% for i in all_dept %}
-                                            <option value="{{ i.id }}">{{ i.Dep_name }}</option>
+                                            <option>{{ i.Dep_name }}</option>
                                             {% endfor %}
                                         </select>
                                     </td>
@@ -320,6 +320,34 @@
                         </form>
 
                     </div>
+
+                {% elif show_emp %}
+                <h2>All Employees</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Email</th>
+                            <th>Depatment</th>
+                            <th>Code</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in all_emp %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{ i.Name }}</td>
+                            <td>{{ i.Contact}}</td>
+                            <td>{{ i.Email}}</td>
+                            <td>{{ i.Department}}</td>
+                            <td>{{ i.Code}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                 {% else %}
                 <h2>Welcome to Admin Dashboard</h2>
                 {% endif %}

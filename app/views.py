@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from .models import Employee
 from .models import Department 
 from django.contrib import messages
+from django.core.mail import send_mail
 
 # Create your views here.
 def landing(req):
@@ -129,5 +130,42 @@ def add_emp(req):
         a_data=req.session.get('a_data')
         all_dept=Department.objects.all()
         return render(req,'admindashboard.html',{'data':a_data,'add_emp':True,'all_dept':all_dept})
+    else:
+        return redirect('login')
+
+def save_emp(req):
+    if 'a_data' in req.session:
+        if req.method=='POST':
+            e_n=req.POST.get('emp_name') 
+            e_c=req.POST.get('emp_contact') 
+            e_e=req.POST.get('emp_email') 
+            e_d=req.POST.get('emp_dept')
+            e_co=req.POST.get('emp_code')
+            e_i=req.FILES.get('emp_image')
+            emp=Employee.objects.filter(Email=e_e)
+            if emp:
+                messages.warning(req,'Employee already exists')
+                a_data=req.session.get('a_data')
+                return render(req,'admindashboard.html',{'data':a_data,'add_emp':True})
+            else:
+                Employee.objects.create(Name=e_n,Contact=e_c,Email=e_e,Department=e_d,Code=e_co,Image=e_i)
+                send_mail(
+                        "Mail coming from django server",
+                        f'This information regarding your company credential Name:{e_n}, Email:{e_e},Contact:{e_c}, Department={e_d},Code={e_co}',
+                        "prasadanujkumar045@gmail.com",
+                        [e_e],
+                        fail_silently=False,
+                        )
+                messages.success(req,"Employee added")
+                a_data=req.session.get('a_data')
+                return render(req,'admindashboard.html',{'data':a_data,'add_dep':True})
+    else:
+        return redirect('login')
+    
+def show_emp(req):
+    if 'a_data' in req.session:
+        a_data=req.session.get('a_data')
+        all_emp=Employee.objects.all()
+        return render(req,'admindashboard.html',{'data':a_data,'show_emp':True,'all_emp':all_emp})
     else:
         return redirect('login')

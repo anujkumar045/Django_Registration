@@ -30,4 +30,8 @@ urlpatterns = [
     path('admindashboard/save_data/',save_data,name='save_data'),
     path('admindashboard/show_dep/',show_dep,name='show_dep'),
     path('admindashboard/add_emp/',add_emp,name='add_emp'),
+    path('admindashboard/save_emp/',save_emp,name='save_emp'),
+    path('admindashboard/show_emp/',show_emp,name='show_emp'),
+    
+
 ]
