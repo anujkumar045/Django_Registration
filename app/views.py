@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from .models import Employee
 from .models import Department 
+from .models import Empquery
 from django.contrib import messages
 from django.core.mail import send_mail
 
@@ -56,19 +57,35 @@ def login(req):
             req.session['a_data']=a_data
             return redirect('admindashboard')
         else:
-            user=Employee.objects.filter(Email=e)
-            if not user:
-                msg="Register First"
-                return redirect('register')
-            else:
-                userdata=Employee.objects.get(Email=e)
-                if p==userdata.Password:
-                    req.session['user_id']=userdata.id
-                    return redirect('userdashboard')
+            # user=Employee.objects.filter(Email=e)
+            # if not user:
+            #     msg="Register First"
+            #     return redirect('register')
+            # else:
+            #     userdata=Employee.objects.get(Email=e)
+            #     if p==userdata.Password:
+            #         req.session['user_id']=userdata.id
+            #         return redirect('userdashboard')
+            #     else:
+            #         msg='Email & Password not match'
+            #         return render(req,'login.html',{'umsg':msg})
+            employee=Employee.objects.filter(Email=e)
+            if employee:
+                emp_data=Employee.objects.get(Email=e)
+                if p==emp_data.Code:
+                    req.session['emp_id']=emp_data.id
+                    print(emp_data.id)
+                    print(emp_data.Code)
+                    print(p)
+                    return redirect('empdashboard')
                 else:
-                    msg='Email & Password not match'
-                    return render(req,'login.html',{'umsg':msg})
-    return render(req,'login.html')
+                    messages.warning(req,"Email and Passsword does not matched")
+                    return redirect('login')
+            else:
+                messages.warning(req,"Not a registered user")
+                return redirect("login")   
+    return render(req,'login.html')    
+
 
 def userdashboard(req):
     if 'user_id' in req.session:
@@ -166,6 +183,127 @@ def show_emp(req):
     if 'a_data' in req.session:
         a_data=req.session.get('a_data')
         all_emp=Employee.objects.all()
-        return render(req,'admindashboard.html',{'data':a_data,'show_emp':True,'all_emp':all_emp})
+        all_dept=Department.objects.all()
+        return render(req,'admindashboard.html',{'data':a_data,'show_emp':True,'all_emp':all_emp,'all_dept':all_dept})
     else:
         return redirect('login')
+    
+def emp_all_query(req):
+    if 'a_data' in req.session:
+        a_data=req.session.get('a_data')
+        all_query=Empquery.objects.all()
+        return render(req,'admindashboard.html',{'data':a_data,'emp_all_query':True,'all_query':all_query})
+    else:
+        return redirect("login")
+
+def reply(req,pk):
+    if 'a_data' in req.session:
+        q_data=Empquery.objects.get(id=pk)
+        emp_all_query=Empquery.objects.all()
+        return render(req,{'q_data':q_data,'emp_all_query':emp_all_query})
+    
+def empdashboard(req):
+    if 'emp_id' in req.session:
+        eid=req.session.get('emp_id')
+        emp_data=Employee.objects.get(id=eid)
+        return render(req,'empdashboard.html',{'data':emp_data})
+    else:
+        return redirect('login')
+    
+def query(req):
+    if 'emp_id' in req.session:
+        # emp_data=req.session.get('emp_id')
+        eid=req.session.get('emp_id')
+        emp_data=Employee.objects.get(id=eid)
+        all_dept=Department.objects.all()
+        return render(req,'empdashboard.html',{'data':emp_data,'query':True,'all_dept':all_dept})
+    return redirect('empdashboard')
+
+def profile(req):
+    if 'emp_id' in req.session:
+        # emp_data=req.session.get('emp_id')
+        eid=req.session.get('emp_id')
+        emp_data=Employee.objects.get(id=eid)
+        # all_dept=Department.objects.all()
+        return render(req,'empdashboard.html',{'data':emp_data,'profile':True})
+    return redirect('empdashboard')
+
+def setting(req):
+    if 'emp_id' in req.session:
+        # emp_data=req.session.get('emp_id')
+        eid=req.session.get('emp_id')
+        emp_data=Employee.objects.get(id=eid)
+        # all_dept=Department.objects.all()
+        return render(req,'empdashboard.html',{'data':emp_data,'setting':True})
+    return redirect('empdashboard')
+
+def querydata(req):
+    if req.method=='POST':
+        if 'emp_id' in req.session:
+            n= req.POST.get('name')
+            e= req.POST.get('email')
+            d= req.POST.get('department')
+            q = req.POST.get('query')
+            Empquery.objects.create(Name=n,Email=e,Department=d,Query=q)
+            messages.success(req,"Query created")
+            eid=req.session.get('emp_id')
+            emp_data=Employee.objects.get(id=eid)
+            all_dept=Department.objects.all()
+            return render(req,'empdashboard.html',{'data':emp_data,'query':True,'all_dept':all_dept})
+        else:
+            return redirect('empdashboard')
+    return redirect('login')
+    
+def all_query(req):
+    if 'emp_id' in req.session:
+        eid=req.session.get('emp_id')
+        emp_data=Employee.objects.get(id=eid)
+        all_dept=Department.objects.all()
+        all_query=Empquery.objects.filter(Email=emp_data.Email)
+        return render(req,'empdashboard.html',{'data':emp_data,'all_query':True,'all_query':all_query,'all_dept':all_dept})
+    else:
+        return redirect("login")
+
+def pending_query(req):
+    if 'emp_id' in req.session:
+        eid=req.session.get('emp_id')
+        emp_data=Employee.objects.get(id=eid)
+        all_dept=Department.objects.all()
+        pending_query=Empquery.objects.filter(Status="pending")
+        return render(req,'empdashboard.html',{'data':emp_data,'pending_query':True,'all_query':pending_query,'all_dept':all_dept})
+    else:
+        return redirect("login")
+    
+def done_query(req):
+    if 'emp_id' in req.session:
+        eid=req.session.get('emp_id')
+        emp_data=Employee.objects.get(id=eid)
+        all_dept=Department.objects.all()
+        pending_query=Empquery.objects.filter(Status="done")
+        return render(req,'empdashboard.html',{'data':emp_data,'done_query':True,'all_query':done_query,'all_dept':all_dept})
+    else:
+        return redirect("login")
+
+def edit1(req):
+    return render(req,'edit.html')
+
+def reset(req):
+     if 'emp_id' in req.session:
+        if req.method=='POST':
+        # emp_data=req.session.get('emp_id')
+            eid=req.session.get('emp_id') 
+            image=req.FILES.get('img')
+            emp_data=Employee.objects.get(id=eid)
+            emp_data.Image=image
+            emp_data.save()
+            messages.success(req,"Image changed successfully")
+            return redirect('profile')
+        else:
+            return render(req,'edit.html')
+     return render(req,'login.html')
+
+
+    
+        
+        
+        

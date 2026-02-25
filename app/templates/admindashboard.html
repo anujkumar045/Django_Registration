@@ -190,7 +190,7 @@
             <a href="{% url 'show_dep' %}">Show Department</a>
             <a href="{% url 'add_emp' %}">Add Employee</a>
             <a href="{% url 'show_emp' %}">Show Employee</a>
-            <a href="#">Employee Query</a>
+            <a href="{% url 'emp_all_query' %}">Employee Query</a>
             <a href="#">Profile</a>
         </div>
 
@@ -235,7 +235,7 @@
                 </form>
 
                 <!-- Show Department Table -->
-                {% elif show_dep %}
+            {% elif show_dep %}
                 <h2>All Departments</h2>
 
                 <table>
@@ -348,6 +348,67 @@
                         {% endfor %}
                     </tbody>
                 </table>
+
+                {% elif emp_all_query %}
+                 <h2>Employee Query</h2>
+
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Query</th>
+                            <th>Status</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                            <th>Reply</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in all_query %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{ i.Name }}</td>
+                            <td>{{ i.Email}}</td>
+                            <td>{{ i.Department}}</td>
+                            <td>{{ i.Query}}</td>
+                            <td>{{ i.Status}}</td>
+                            <td><button>Edit</button></td>
+                            <td><button>Delete</button></td>
+                            <td><a href="{% url 'reply' pk=i.id %}">Reply</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                {% if q_data %}
+                <form method="POST" action="">
+                    {% csrf_token %}
+
+                    <label>Name</label>
+                    <input type="text" value="{{ q_data.Name }}" name="name" readonly>
+
+                    <label>Email</label>
+                    <input type="email" value="{{ q_data.Email }}" name="email" readonly>
+
+                    <label>Employee Code</label>
+                    <input type="text" value="{{ q_data.Code }}" name="emp_code" readonly>
+
+                    <label>Department</label>
+                    <input type="text" value="{{ q_data.Department }}" name="emp_code" readonly>
+
+                    <label>Query</label>
+                    <input type="text" value="{{ q_data.Query }}" name="emp_code" readonly>
+                    
+
+                    <label>Reply</label>
+                    <textarea name="query" rows="4"></textarea>
+
+                    <button type="submit">Submit Query</button>
+                </form>
+                {% endif %}
                 {% else %}
                 <h2>Welcome to Admin Dashboard</h2>
                 {% endif %}

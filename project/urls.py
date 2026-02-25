@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from app.views import *
 
 urlpatterns = [
@@ -32,6 +34,16 @@ urlpatterns = [
     path('admindashboard/add_emp/',add_emp,name='add_emp'),
     path('admindashboard/save_emp/',save_emp,name='save_emp'),
     path('admindashboard/show_emp/',show_emp,name='show_emp'),
-    
-
-]
+    path('admindashboard/emp_all_query/',emp_all_query,name='emp_all_query'),
+    path('admindashboard/emp_all_query/reply/<int:x>/',reply,name='reply'),
+    path('empdashboard/',empdashboard,name='empdashboard'),
+    path('empdashboard/query',query,name='query'),
+    path('empdashboard/profile',profile,name='profile'),
+    path('empdashboard/setting',setting,name='setting'),
+    path('empdashboard/querydata',querydata,name='querydata'),
+    path('empdashboard/all_query',all_query,name='all_query'),
+    path('empdashboard/pending_query',pending_query,name='pending_query'),
+    path('empdashboard/done_query',done_query,name='done_query'),
+    path('edit1',edit1,name='edit1'),
+    path('reset',reset,name='reset'),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
