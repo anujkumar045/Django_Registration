@@ -196,12 +196,28 @@ def emp_all_query(req):
     else:
         return redirect("login")
 
-def reply(req,pk):
+def q_reply(req,pk):
     if 'a_data' in req.session:
+        # q_d_id=Empquery.objects.get(id)
+        # q_id=req.session[q_d_id]
         q_data=Empquery.objects.get(id=pk)
         emp_all_query=Empquery.objects.all()
-        return render(req,{'q_data':q_data,'emp_all_query':emp_all_query})
-    
+        return render(req,'admindashboard.html',{'q_data':q_data,'emp_all_query':emp_all_query})
+    return redirect('login')
+
+def a_reply(req,pk):
+    if 'a_data' in req.session:
+        q_old_data=Empquery.objects.get(id=pk)
+        if req.method=='POST':
+            ar=req.POST.get('reply')
+            q_old_data.Reply=ar
+            q_old_data.save()          
+            q_old_data.Status="Done"
+            q_old_data.save()
+        a_data=req.session.get('a_data')
+        emp_all_query=Empquery.objects.all()
+        return render(req,'admindashboard.html',{'a_data':a_data,'emp_all_query':emp_all_query})
+            
 def empdashboard(req):
     if 'emp_id' in req.session:
         eid=req.session.get('emp_id')
@@ -269,8 +285,8 @@ def pending_query(req):
         eid=req.session.get('emp_id')
         emp_data=Employee.objects.get(id=eid)
         all_dept=Department.objects.all()
-        pending_query=Empquery.objects.filter(Status="pending")
-        return render(req,'empdashboard.html',{'data':emp_data,'pending_query':True,'all_query':pending_query,'all_dept':all_dept})
+        pending_query=Empquery.objects.filter(Status="pending",Email=emp_data.Email)
+        return render(req,'empdashboard.html',{'data':emp_data,'pending_query':True,'pending_query':pending_query,'all_dept':all_dept})
     else:
         return redirect("login")
     
@@ -279,10 +295,12 @@ def done_query(req):
         eid=req.session.get('emp_id')
         emp_data=Employee.objects.get(id=eid)
         all_dept=Department.objects.all()
-        pending_query=Empquery.objects.filter(Status="done")
-        return render(req,'empdashboard.html',{'data':emp_data,'done_query':True,'all_query':done_query,'all_dept':all_dept})
+        done_query=Empquery.objects.filter(Status="Done",Email=emp_data.Email)
+        return render(req,'empdashboard.html',{'data':emp_data,'done_query':True,'done_query':done_query,'all_dept':all_dept})
     else:
         return redirect("login")
+    
+
 
 def edit1(req):
     return render(req,'edit.html')

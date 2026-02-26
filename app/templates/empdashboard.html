@@ -131,7 +131,7 @@
             <a href="{% url 'query' %}">Raise Query</a>
             <a href="{% url 'all_query' %}">All Query</a>
             <a href="{% url 'pending_query' %}">Pending Query</a>
-            <a href="#">Done Query</a>
+            <a href="{% url 'done_query' %}">Done Query</a>
         </div>
 
         <!-- Main Content -->
@@ -299,6 +299,7 @@
                             <th>Status</th>
                             <th>Edit</th>
                             <th>Delete</th>
+                            <th>Reply</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -309,9 +310,26 @@
                             <td>{{ i.Email}}</td>
                             <td>{{ i.Department}}</td>
                             <td>{{ i.Query}}</td>
-                            <td>{{ i.Status}}</td>
-                            <td><button>Edit</button></td>
-                            <td><button>Delete</button></td>
+                            <td>{% if i.Reply %}
+                                    Done
+                                {% else %}
+                                    {{i.Status}}
+                                {% endif %}</td>
+                            <td>{% if i.Reply %}
+                                    Nan
+                                {% else %}
+                                    Edit
+                                {% endif %}</td>
+                            </td>
+                            <td>
+                                {% if i.Reply %}
+                                    Nan
+                                {% else %}
+                                    Delete
+                                {% endif %}</td>
+                            </td>
+                            <td>{{i.Reply}}</td>
+
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -331,10 +349,11 @@
                             <th>Status</th>
                             <th>Edit</th>
                             <th>Delete</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
-                        {% for i in all_query %}
+                        {% for i in pending_query %}
                             
                             <tr>
                                 <td>{{forloop.counter}}</td>
@@ -366,7 +385,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for i in all_query %}
+                        {% for i in done_query %}
                             
                             <tr>
                                 <td>{{forloop.counter}}</td>

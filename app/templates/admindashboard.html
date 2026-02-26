@@ -180,7 +180,7 @@
             <img src="{% static 'images/pp1.jpeg' %}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
             <span>Welcome {{ data.name }}</span>
         </div>
-        <div><a href="#">Logout</a></div>
+        <div><a href="{% url 'logout' %}">Logout</a></div>
     </div>
 
     <div class="container">
@@ -374,38 +374,54 @@
                             <td>{{ i.Email}}</td>
                             <td>{{ i.Department}}</td>
                             <td>{{ i.Query}}</td>
-                            <td>{{ i.Status}}</td>
-                            <td><button>Edit</button></td>
-                            <td><button>Delete</button></td>
-                            <td><a href="{% url 'reply' pk=i.id %}">Reply</a></td>
+                            <td>{% if i.Reply %}
+                                    Done
+                                {% else %}
+                                    {{i.Status}}
+                                {% endif %}</td>
+                            <td>{% if i.Reply %}
+                                    Nan
+                                {% else %}
+                                    Edit
+                                {% endif %}</td>
+                            </td>
+                            <td>
+                                {% if i.Reply %}
+                                    Nan
+                                {% else %}
+                                    Delete
+                                {% endif %}</td>
+                            </td>
+                            <td>{% if i.Reply %}
+                                    {{i.Reply}}
+                                {% else %}
+                                    <a href="{% url 'q_reply' pk=i.id %}">Reply</a>
+                                {% endif %}
+                                </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
                 
                 {% if q_data %}
-                <form method="POST" action="">
+                <form method="POST" action="{% url 'a_reply' pk=q_data.id %}">
                     {% csrf_token %}
 
                     <label>Name</label>
                     <input type="text" value="{{ q_data.Name }}" name="name" readonly>
-
+                    <br><br>
                     <label>Email</label>
                     <input type="email" value="{{ q_data.Email }}" name="email" readonly>
-
-                    <label>Employee Code</label>
-                    <input type="text" value="{{ q_data.Code }}" name="emp_code" readonly>
-
+                    <br><br>
                     <label>Department</label>
-                    <input type="text" value="{{ q_data.Department }}" name="emp_code" readonly>
-
+                    <input type="text" value="{{ q_data.Department }}" name="department" readonly>
+                    <br><br>                  
                     <label>Query</label>
-                    <input type="text" value="{{ q_data.Query }}" name="emp_code" readonly>
-                    
-
+                    <input type="text" value="{{ q_data.Query }}" name="query" readonly>
+                    <br><br>
                     <label>Reply</label>
-                    <textarea name="query" rows="4"></textarea>
-
+                    <textarea name="reply" rows="4"></textarea>
+                    <br><br>
                     <button type="submit">Submit Query</button>
                 </form>
                 {% endif %}
